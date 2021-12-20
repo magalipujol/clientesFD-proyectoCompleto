@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>clientesFD_proyectoCompleto</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CalculadoraService\CalculadoraService.csproj" />
+    <ProjectReference Include="..\Importador\Importador.csproj" />
+    <ProjectReference Include="..\ModeloDatos\ModeloDatos.csproj" />
+  </ItemGroup>
+
+</Project>
