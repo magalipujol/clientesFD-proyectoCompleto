@@ -66,6 +66,14 @@ namespace CalculadoraService
                                         List<VolumenServicio> servicios,
                                         DateTime inicioMes)
         {
+            var query = from cliente in clientes
+                        join consumo in consumos
+                        on cliente.Id equals consumo.IdCliente
+                        select new
+                        {
+                            cliente.Id, // TODO agregar todos los datos de ambas tablas que necesite
+                        };
+
             int[] AllId = ClientesConUnConsumo(clientes, consumos);
             return AllId.Distinct().ToArray();
 
