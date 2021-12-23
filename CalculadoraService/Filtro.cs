@@ -12,21 +12,18 @@ namespace CalculadoraService
         /// de agosto 2017
         /// NOTA: usa una tabla con información del periodo 
         /// </summary>
-        public int[] ClientesConUnConsumo(List<Cliente> clientes, List<Consumo> consumos)
+        public List<int> ClientesConUnConsumo(List<Consumo> consumos)
         {
-            return (from consumo in consumos
-                    join cliente in clientes
-                    on consumo.IdCliente equals cliente.Id
-                    select cliente.Id).ToArray();
+            return consumos.Select(c => c.IdCliente).Distinct().ToList();
         }
 
         /// <summary>
         /// devuelvo los clientes que pertenecen al mercado FD
         /// (FD = firme y distribución)
         /// </summary>
-        public int[] ClientesFD(List<Cliente> clientes)
+        public List<int> ClientesFD(List<Cliente> clientes)
         {
-            return clientes.Where(c => c.Mercado == "FD").Select(c => c.Id).ToArray();
+            return clientes.Where(c => c.Mercado == "FD").Select(c => c.Id).Distinct().ToList();
         }
 
         // servicios
@@ -40,16 +37,15 @@ namespace CalculadoraService
         /// devuelve los clientes que tienen volumen contratado
         /// en el mes que inicia en 'inicioMes'
         /// </summary>
-        public int[] ClientesConVolContratado(List<Cliente> clientes, List<VolumenServicio> servicios, DateTime inicioMes)
+        /// TODO los joins son innecesarios
+        public List<int> ClientesConVolContratado(List<Cliente> clientes, List<VolumenServicio> servicios, DateTime inicioMes)
         {
-            return (from cliente in clientes
-                    join servicio in servicios
-                    on cliente.Id equals servicio.IdCliente
+            return (from servicio in servicios
                     where servicio.FechaInicio <= inicioMes &&
                           servicio.FechaFin >= inicioMes.AddMonths(1).AddDays(-1) &&
                           servicio.Firme == "S" &&
                           servicio.CDC != 0
-                    select cliente.Id).ToArray();
+                    select servicio.IdCliente).Distinct().ToList();
         }
         /// <summary>
         /// Son los clientes que tienen una CDC > 0 (Firme = S) y vigente en el mes 
@@ -66,17 +62,11 @@ namespace CalculadoraService
                                         List<VolumenServicio> servicios,
                                         DateTime inicioMes)
         {
-            var query = from cliente in clientes
-                        join consumo in consumos
-                        on cliente.Id equals consumo.IdCliente
-                        select new
-                        {
-                            cliente.Id, // TODO agregar todos los datos de ambas tablas que necesite
-                        };
+            var clientesFD = this.ClientesFD(clientes);
+            var clientesConConsumo = this.ClientesConUnConsumo(consumos);
+            var clientesConVolContratado = this.ClientesConVolContratado(clientes, servicios, inicioMes);
 
-            int[] AllId = ClientesConUnConsumo(clientes, consumos);
-            return AllId.Distinct().ToArray();
-
+            return clientesFD.Intersect(clientesConConsumo).Intersect(clientesConVolContratado).ToArray();
         }
     }
 }
