@@ -12,9 +12,11 @@ namespace CalculadoraService
         /// de agosto 2017
         /// NOTA: usa una tabla con información del periodo 
         /// </summary>
+        
+        // nota: no está funcionando el filtro, no elimina los clientes con consumo 0
         public List<int> ClientesConUnConsumo(List<Consumo> consumos)
         {
-            return consumos.Select(c => c.IdCliente).Distinct().ToList();
+            return (from consumo in consumos where consumo.ConsumoPlanta != 0 select consumo.IdCliente).Distinct().ToList();
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace CalculadoraService
                             .GroupBy(s => s.IdCliente).ToDictionary(k => k.Key, v => v.Sum(x => x.CDC));
         }
 
-        public int[] ClientesFiltrados(List<Cliente> clientes,
+        public List<int> ClientesFiltrados(List<Cliente> clientes,
                                         List<Consumo> consumos,
                                         List<VolumenServicio> servicios,
                                         DateTime inicioMes)
@@ -65,8 +67,8 @@ namespace CalculadoraService
             var clientesFD = this.ClientesFD(clientes);
             var clientesConConsumo = this.ClientesConUnConsumo(consumos);
             var clientesConVolContratado = this.ClientesConVolContratado(clientes, servicios, inicioMes);
-
-            return clientesFD.Intersect(clientesConConsumo).Intersect(clientesConVolContratado).ToArray();
+            var resultado = (clientesFD.Intersect(clientesConConsumo)).Intersect(clientesConVolContratado).ToList();
+            return resultado;
         }
     }
 }

@@ -15,17 +15,13 @@ namespace clientesFD_proyectoCompleto
             var servicios = Parser.TxtToVolServicio("C:/Users/magalip/Documents/Datos problema/Datos Problemas/volumen_servicio_v2.txt");
             var consumos = Parser.TxtToConsumo("C:/Users/magalip/Documents/Datos problema/Datos Problemas/consumos-ago-2017.txt");
             var clientes = Parser.TxtToClients("C:/Users/magalip/Documents/Datos problema/Datos Problemas/clientes.txt");
-
             DateTime fechaInicio = new DateTime(2017, 8, 1);
-            DateTime fechaFin = new DateTime(2017, 8, 31);
 
-            var filtro = new Filtro();
-            var clientesFiltrados = filtro.ClientesFiltrados(clientes, consumos, servicios, fechaInicio);
-            foreach (var cliente in clientesFiltrados)
-            {
-                Console.WriteLine(cliente);
-            }
-            Console.WriteLine(clientesFiltrados.Count());
+
+            FactorCargaCalculadora calculadoraService = new FactorCargaCalculadora();
+            var FC = calculadoraService.ObtenerFactoresCarga(transportes, servicios, consumos, clientes, fechaInicio);
+
+            calculadoraService.MostrarFactoresCarga(FC);
         }
     }
 }
