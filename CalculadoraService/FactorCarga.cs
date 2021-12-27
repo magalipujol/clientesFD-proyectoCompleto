@@ -23,10 +23,7 @@ namespace CalculadoraService
         /// devuelve un int con el FD calculado con
         /// sumatoria de los consumos / CDC * periodo
         /// </summary>
-        public double CalcularFactorCarga(int idCliente,
-                                          List<TransporteTerceros> transportes,
-                                          List<Consumo> consumos,
-                                          int CDC)
+        public double CalcularFactorCarga(int idCliente, List<TransporteTerceros> transportes, List<Consumo> consumos, int CDC)
         {
             int tteFirme = 0;
             foreach (var c in consumos.Where(c => c.IdCliente == idCliente))
@@ -40,38 +37,48 @@ namespace CalculadoraService
             return Math.Round(100.0 * tteFirme / (31 * CDC), 2);
         }
 
-
-        public int getCDC(int idCliente,
-                          List<VolumenServicio> volumenServicios,
-                          DateTime fechaInicioPeriodo,
-                          DateTime fechaFinPeriodo)
+        /// <summary>
+        /// devuelve la CDC de un cliente en particular 
+        /// dentro de un periodo
+        /// </summary>
+        public int getCDC(int idCliente, List<VolumenServicio> volumenServicios, DateTime fechaInicioPeriodo)
         {
             var cliente = volumenServicios.Where(s => s.FechaInicio <= fechaInicioPeriodo &&
-                                   s.FechaFin >= fechaFinPeriodo &&
+                                   s.FechaFin >= fechaInicioPeriodo.AddMonths(1).AddDays(-1) &&
                                    s.IdCliente == idCliente && s.CDC != 0).Select(s => s.CDC).First();
             return cliente;
         }
 
-
+        /// <summary>
+        /// devuelve el nombre de un cliente a partir de su id
+        /// </summary>
         public string NombreAPartirDeId(List<Cliente> clientes, int id)
         {
             return (from cliente in clientes where cliente.Id == id select cliente.Nombre).First();
         }
+
+        /// <summary>
+        /// devuelve una lista de FactorCarga, que incluye el id del cliente, su nombre y su factor de carga
+        /// en un periodo determinado
+        /// </summary>
         public List<FactorCarga> ObtenerFactoresCarga(List<TransporteTerceros> transportes, List<VolumenServicio> servicios, List<Consumo> consumos, List<Cliente> clientes, DateTime fechaInicio)
         {
             List<FactorCarga> FactoresCarga = new List<FactorCarga>();
             var filtro = new Filtro();
             var clientesFiltrados = filtro.ClientesFiltrados(clientes, consumos, servicios, fechaInicio);
-            var fechaFin = fechaInicio.AddMonths(1).AddDays(-1);
             int CDC;
             foreach (int clienteId in clientesFiltrados)
             {
-                CDC = getCDC(clienteId, servicios, fechaInicio, fechaFin);
+                CDC = getCDC(clienteId, servicios, fechaInicio);
                 FactoresCarga.Add(new FactorCarga { FD = CalcularFactorCarga(clienteId, transportes, consumos, CDC), IdCliente = clienteId, NombreCliente = NombreAPartirDeId(clientes, clienteId) });
             };
             return FactoresCarga;
         }
 
+        /// <summary>
+        /// muestra por consola una tabla con el id del cliente,
+        /// su nombre y el factor de carga
+        /// </summary>
         public void MostrarFactoresCarga(List<FactorCarga> factoresCarga)
         {
             Console.WriteLine("ID_CLIENTE\tNOMBRE\t\t\t FACTOR_CARGA");

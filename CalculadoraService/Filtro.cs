@@ -20,7 +20,7 @@ namespace CalculadoraService
         }
 
         /// <summary>
-        /// devuelvo los clientes que pertenecen al mercado FD
+        /// devuelvo los id de clientes que pertenecen al mercado FD
         /// (FD = firme y distribución)
         /// </summary>
         public List<int> ClientesFD(List<Cliente> clientes)
@@ -28,18 +28,10 @@ namespace CalculadoraService
             return clientes.Where(c => c.Mercado == "FD").Select(c => c.Id).Distinct().ToList();
         }
 
-        // servicios
-        //ID_CLIENTE FECHA_INICIO    FECHA_FIN FIRME   TRANSPORTE SERVICIO    CDC
-        //1061	     1/5/2011	     30/4/2012 S       S          TYDF	      10000
-
-        // clientes
-        //ID_CLIENTE CLIENTE             MERCADO
-        //1198	     COMBUSTIBLES TAFI   GNC
         /// <summary>
         /// devuelve los clientes que tienen volumen contratado
         /// en el mes que inicia en 'inicioMes'
         /// </summary>
-        /// TODO los joins son innecesarios
         public List<int> ClientesConVolContratado(List<Cliente> clientes, List<VolumenServicio> servicios, DateTime inicioMes)
         {
             return (from servicio in servicios
@@ -59,6 +51,11 @@ namespace CalculadoraService
                             .GroupBy(s => s.IdCliente).ToDictionary(k => k.Key, v => v.Sum(x => x.CDC));
         }
 
+        /// <summary>
+        /// devuelve una lista de los id de los clientes
+        /// que tienen al menos un consumo en el periodo
+        /// y una CDC contratada > 0
+        /// </summary>
         public List<int> ClientesFiltrados(List<Cliente> clientes,
                                         List<Consumo> consumos,
                                         List<VolumenServicio> servicios,
