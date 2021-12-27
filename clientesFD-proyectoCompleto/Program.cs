@@ -22,6 +22,7 @@ namespace clientesFD_proyectoCompleto
             var FC = calculadoraService.ObtenerFactoresCarga(transportes, servicios, consumos, clientes, fechaInicio);
 
             calculadoraService.MostrarFactoresCarga(FC);
+
         }
     }
 }

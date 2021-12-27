@@ -34,7 +34,7 @@ namespace CalculadoraService
                 tteFirme += Math.Min(tteDistco, CDC);
             }
 
-            return Math.Round(100.0 * tteFirme / (31 * CDC), 2);
+            return Math.Round(100.0 * tteFirme / (31 * CDC), 5);
         }
 
         /// <summary>
