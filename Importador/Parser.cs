@@ -6,7 +6,111 @@ using ModeloDatos;
 
 namespace Importador
 {
-    public class Parser
+    public abstract class ParserBase
+    {
+        protected List<string[]> items = new List<string[]>();
+
+        public ParserBase (string path)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException ("path is null");
+            }
+            string[] lines = File.ReadAllLines(path);
+            foreach (string line in lines.Skip(1))
+            {
+                items.Add(line.Split('\t'));
+            }
+        }
+    }
+
+    public class ParserCliente : ParserBase
+    {
+        public ParserCliente(string path)
+            : base(path)
+        {
+        }
+        public List<Cliente> DoParse()
+        {
+            var clientes = new List<Cliente>();
+            foreach (var linea in items)
+            {
+                clientes.Add(new Cliente()
+                {
+                    Id = int.Parse(linea[0]),
+                    Nombre = linea[1],
+                    Mercado = linea[2]
+                }
+                );
+            }
+            return clientes;
+        }
+    }
+
+    public class ParserConsumo : ParserBase
+    {
+        public ParserConsumo(string path) : base(path) { }
+
+        public List<Consumo> DoParse()
+        {
+            var Consumos = new List<Consumo>();
+            foreach (var linea in items)
+            {
+                Consumos.Add(new Consumo()
+                {
+                    DiaOperativo = DateTime.Parse(linea[0]),
+                    IdCliente = int.Parse(linea[1]),
+                    ConsumoPlanta = int.Parse(linea[2])
+                }
+                );
+            }
+            return Consumos;
+        }
+    }
+
+    public class ParserTteTerceros : ParserBase
+    {
+        public ParserTteTerceros(string path) : base(path) { }
+        public List<TransporteTerceros> DoParse()
+        {
+            var TteTerceros = new List<TransporteTerceros>();
+            foreach (var linea in items)
+            {
+                TteTerceros.Add(new TransporteTerceros()
+                {
+                    DiaOperativo = DateTime.Parse(linea[0]),
+                    IdCliente = int.Parse(linea[1]),
+                    IdCargador = int.Parse(linea[2]),
+                    Asignado = int.Parse(linea[3])
+                }
+                );
+            }
+            return TteTerceros;
+        }
+    }
+
+    public class ParserServicio : ParserBase
+    {
+        public ParserServicio(string path) : base(path) { }
+        public List<VolumenServicio> DoParse()
+        {
+            var Servicios = new List<VolumenServicio>();
+            foreach (var linea in items)
+            {
+                Servicios.Add(new VolumenServicio()
+                {
+                    IdCliente = int.Parse(linea[0]),
+                    FechaInicio = DateTime.Parse(linea[1]),
+                    FechaFin = DateTime.Parse(linea[2]),
+                    Firme = linea[3],
+                    Servicio = linea[4],
+                    CDC = int.Parse(linea[5])
+                });
+            }
+            return Servicios;
+        }
+    }
+public class Parser
     {
         /// <summary>
         /// estos métodos van a devolver colecciones de objetos 

@@ -21,10 +21,10 @@ namespace clientesFD_proyectoCompleto
             var pathTteTerceros = basePath + System.Configuration.ConfigurationSettings.AppSettings["TteTerceros"];
             var pathServicios = basePath + System.Configuration.ConfigurationSettings.AppSettings["Servicios"];
 
-            var transportes = Parser.TxtToTteTerceros(pathTteTerceros);
-            var servicios = Parser.TxtToVolServicio(pathServicios);
-            var consumos = Parser.TxtToConsumo(pathConsumos);
-            var clientes = Parser.TxtToClients(pathClientes);
+            var transportes = new ParserTteTerceros(pathTteTerceros).DoParse();
+            var servicios = new ParserServicio(pathServicios).DoParse();
+            var consumos = new ParserConsumo(pathConsumos).DoParse();
+            var clientes = new ParserCliente(pathClientes).DoParse();
             DateTime fechaInicio = new DateTime(2017, 8, 1);
 
 
