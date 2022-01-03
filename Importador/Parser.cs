@@ -33,13 +33,13 @@ namespace Importador
         public List<Cliente> DoParse()
         {
             var clientes = new List<Cliente>();
-            foreach (var linea in items)
+            foreach (var line in items)
             {
                 clientes.Add(new Cliente()
                 {
-                    Id = int.Parse(linea[0]),
-                    Nombre = linea[1],
-                    Mercado = linea[2]
+                    Id = int.Parse(line[0]),
+                    Nombre = line[1],
+                    Mercado = line[2]
                 }
                 );
             }
@@ -54,13 +54,13 @@ namespace Importador
         public List<Consumo> DoParse()
         {
             var Consumos = new List<Consumo>();
-            foreach (var linea in items)
+            foreach (var line in items)
             {
                 Consumos.Add(new Consumo()
                 {
-                    DiaOperativo = DateTime.Parse(linea[0]),
-                    IdCliente = int.Parse(linea[1]),
-                    ConsumoPlanta = int.Parse(linea[2])
+                    DiaOperativo = DateTime.Parse(line[0]),
+                    IdCliente = int.Parse(line[1]),
+                    ConsumoPlanta = int.Parse(line[2])
                 }
                 );
             }
@@ -74,14 +74,14 @@ namespace Importador
         public List<TransporteTerceros> DoParse()
         {
             var TteTerceros = new List<TransporteTerceros>();
-            foreach (var linea in items)
+            foreach (var line in items)
             {
                 TteTerceros.Add(new TransporteTerceros()
                 {
-                    DiaOperativo = DateTime.Parse(linea[0]),
-                    IdCliente = int.Parse(linea[1]),
-                    IdCargador = int.Parse(linea[2]),
-                    Asignado = int.Parse(linea[3])
+                    DiaOperativo = DateTime.Parse(line[0]),
+                    IdCliente = int.Parse(line[1]),
+                    IdCargador = int.Parse(line[2]),
+                    Asignado = int.Parse(line[3])
                 }
                 );
             }
@@ -95,16 +95,16 @@ namespace Importador
         public List<VolumenServicio> DoParse()
         {
             var Servicios = new List<VolumenServicio>();
-            foreach (var linea in items)
+            foreach (var line in items)
             {
                 Servicios.Add(new VolumenServicio()
                 {
-                    IdCliente = int.Parse(linea[0]),
-                    FechaInicio = DateTime.Parse(linea[1]),
-                    FechaFin = DateTime.Parse(linea[2]),
-                    Firme = linea[3],
-                    Servicio = linea[4],
-                    CDC = int.Parse(linea[5])
+                    IdCliente = int.Parse(line[0]),
+                    FechaInicio = DateTime.Parse(line[1]),
+                    FechaFin = DateTime.Parse(line[2]),
+                    Firme = line[3],
+                    Servicio = line[4],
+                    CDC = int.Parse(line[5])
                 });
             }
             return Servicios;
