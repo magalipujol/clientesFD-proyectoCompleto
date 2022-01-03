@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CalculadoraService\CalculadoraService.csproj" />
     <ProjectReference Include="..\Importador\Importador.csproj" />
     <ProjectReference Include="..\ModeloDatos\ModeloDatos.csproj" />

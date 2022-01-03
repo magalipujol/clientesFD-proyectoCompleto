@@ -9,12 +9,22 @@ namespace clientesFD_proyectoCompleto
 {
     class Program
     {
+        public static object ConfigurationManager { get; private set; }
+
+        [Obsolete]
         static void Main(string[] args)
         {
-            var transportes = Parser.TxtToTteTerceros("C:/Users/magalip/Documents/Datos problema/Datos Problemas/tte_terceros-ago-2017.txt");
-            var servicios = Parser.TxtToVolServicio("C:/Users/magalip/Documents/Datos problema/Datos Problemas/volumen_servicio_v2.txt");
-            var consumos = Parser.TxtToConsumo("C:/Users/magalip/Documents/Datos problema/Datos Problemas/consumos-ago-2017.txt");
-            var clientes = Parser.TxtToClients("C:/Users/magalip/Documents/Datos problema/Datos Problemas/clientes.txt");
+            
+            var basePath = System.Configuration.ConfigurationSettings.AppSettings["Base"];
+            var pathClientes = basePath + System.Configuration.ConfigurationSettings.AppSettings["Clientes"];
+            var pathConsumos= basePath + System.Configuration.ConfigurationSettings.AppSettings["Consumos"];
+            var pathTteTerceros = basePath + System.Configuration.ConfigurationSettings.AppSettings["TteTerceros"];
+            var pathServicios = basePath + System.Configuration.ConfigurationSettings.AppSettings["Servicios"];
+
+            var transportes = Parser.TxtToTteTerceros(pathTteTerceros);
+            var servicios = Parser.TxtToVolServicio(pathServicios);
+            var consumos = Parser.TxtToConsumo(pathConsumos);
+            var clientes = Parser.TxtToClients(pathClientes);
             DateTime fechaInicio = new DateTime(2017, 8, 1);
 
 
