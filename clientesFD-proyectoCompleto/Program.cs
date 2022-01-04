@@ -4,22 +4,20 @@ using System.Linq;
 using System.Collections.Generic;
 using Importador;
 using CalculadoraService;
+using System.Configuration;
 
 namespace clientesFD_proyectoCompleto
 {
     class Program
     {
-        public static object ConfigurationManager { get; private set; }
 
-        [Obsolete]
         static void Main(string[] args)
         {
-            
-            var basePath = System.Configuration.ConfigurationSettings.AppSettings["Base"];
-            var pathClientes = basePath + System.Configuration.ConfigurationSettings.AppSettings["Clientes"];
-            var pathConsumos= basePath + System.Configuration.ConfigurationSettings.AppSettings["Consumos"];
-            var pathTteTerceros = basePath + System.Configuration.ConfigurationSettings.AppSettings["TteTerceros"];
-            var pathServicios = basePath + System.Configuration.ConfigurationSettings.AppSettings["Servicios"];
+            var basePath = ConfigurationManager.AppSettings["Base"];
+            var pathClientes = basePath + ConfigurationManager.AppSettings["Clientes"];
+            var pathConsumos= basePath + ConfigurationManager.AppSettings["Consumos"];
+            var pathTteTerceros = basePath + ConfigurationManager.AppSettings["TteTerceros"];
+            var pathServicios = basePath + ConfigurationManager.AppSettings["Servicios"];
 
             var transportes = new ParserTteTerceros(pathTteTerceros).DoParse();
             var servicios = new ParserServicio(pathServicios).DoParse();
@@ -27,12 +25,15 @@ namespace clientesFD_proyectoCompleto
             var clientes = new ParserCliente(pathClientes).DoParse();
             DateTime fechaInicio = new DateTime(2017, 8, 1);
 
+            FirmeUtilizadoDiarioCalculadora FNUCalculadora = new FirmeUtilizadoDiarioCalculadora();
+            var FNU = FNUCalculadora.ObtenerFirmesNoUtilizadosDiarios(fechaInicio, servicios, consumos);
 
-            FactorCargaCalculadora calculadoraService = new FactorCargaCalculadora();
-            var FC = calculadoraService.ObtenerFactoresCarga(transportes, servicios, consumos, clientes, fechaInicio);
+            //FNUCalculadora.MostrarFirmesNoUtilizadosDiarios(FNU);
+            
+            FactorCargaCalculadora FCCalculadora = new FactorCargaCalculadora();
+            var FC = FCCalculadora.ObtenerFactoresCarga(transportes, servicios, consumos, clientes, fechaInicio);
 
-            calculadoraService.MostrarFactoresCarga(FC);
-
+            //FCCalculadora.MostrarFactoresCarga(FC);
         }
     }
 }
