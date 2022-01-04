@@ -22,6 +22,18 @@ namespace Importador
                 items.Add(line.Split('\t'));
             }
         }
+
+        //public List<T> DoParse<T>() where T : new()
+        //{
+        //    var parsedObjects = new List<T>();
+        //    foreach (var line in items)
+        //    {
+        //        parsedObjects.Add(LineToObject<T>(line));
+        //    }
+        //    return parsedObjects;
+        //}
+
+        //public abstract T LineToObject<T>(string[] line) where T : new();
     }
 
     public class ParserCliente : ParserBase
@@ -30,6 +42,15 @@ namespace Importador
             : base(path)
         {
         }
+
+        //public override Cliente LineToObject<Cliente>(string[] line)
+        //{
+        //    return new Cliente() {
+        //        Id = int.Parse(line[0]),
+        //        Nombre = line[1],
+        //        Mercado = line[2]
+        //    };
+        //}
         public List<Cliente> DoParse()
         {
             var clientes = new List<Cliente>();
